@@ -125,27 +125,30 @@ const ANGRY_LINES = [
   "止まったら負けだ",
 ];
 
-function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
+function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function DancingSasaki({ id, angry, seed }: { id: number; angry: boolean; seed: number }) {
   const rand = useMemo(() => {
-    const moveType = Math.floor(seededRandom(id * 59 + 17) * 4); // 0=stay, 1=small, 2=medium, 3=big wander
+    const moveType = Math.floor(Math.random() * 4);
     return {
-      x: 5 + seededRandom(id * 7 + 3) * 90,
-      y: 5 + seededRandom(id * 13 + 7) * 50,
-      dance: DANCE_STYLES[Math.floor(seededRandom(id * 17 + 1) * DANCE_STYLES.length)],
-      armL: ARM_STYLES[Math.floor(seededRandom(id * 23 + 5) * ARM_STYLES.length)],
-      armR: ARM_STYLES[Math.floor(seededRandom(id * 29 + 9) * ARM_STYLES.length)],
-      legL: LEG_STYLES[Math.floor(seededRandom(id * 31 + 2) * LEG_STYLES.length)],
-      legR: LEG_STYLES[Math.floor(seededRandom(id * 37 + 4) * LEG_STYLES.length)],
-      speed: [0.4, 0.7, 1.0, 1.4][Math.floor(seededRandom(id * 41 + 6) * 4)],
-      delay: id * 0.15,
-      scale: [0.6, 1.4, 2.4, 4.0][Math.floor(seededRandom(id * 43 + 8) * 4)],
-      torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
-      angryLine: ANGRY_LINES[Math.floor(seededRandom(id * 53 + 13) * ANGRY_LINES.length)],
-      face: FACE_IMAGES[Math.floor(seededRandom(id * 67 + 19) * FACE_IMAGES.length)],
+      x: 5 + Math.random() * 90,
+      y: 5 + Math.random() * 50,
+      dance: pick(DANCE_STYLES),
+      armL: pick(ARM_STYLES),
+      armR: pick(ARM_STYLES),
+      legL: pick(LEG_STYLES),
+      legR: pick(LEG_STYLES),
+      speed: pick([0.4, 0.7, 1.0, 1.4]),
+      delay: 0,
+      scale: pick([0.6, 1.4, 2.4, 4.0]),
+      torsoColor: pick(TORSO_COLORS),
+      angryLine: pick(ANGRY_LINES),
+      face: pick(FACE_IMAGES),
       moveType,
-      moveDuration: 3 + seededRandom(id * 61 + 19) * 8,
+      moveDuration: 3 + Math.random() * 8,
     };
-  }, [id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seed]);
 
   const moveClass = ["", "animate-wander-s", "animate-wander-m", "animate-wander-l"][rand.moveType];
 
@@ -210,7 +213,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
 
 /* ====== MAIN ====== */
 export default function Home() {
-  const [sasakis, setSasakis] = useState<{ id: number; angry: boolean }[]>([]);
+  const [sasakis, setSasakis] = useState<{ id: number; angry: boolean; seed: number }[]>([]);
   const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
   const [songName, setSongName] = useState("");
@@ -245,7 +248,7 @@ export default function Home() {
   };
 
   const addSasaki = (angry: boolean) => {
-    setSasakis((prev) => [...prev, { id: prev.length, angry }]);
+    setSasakis((prev) => [...prev, { id: prev.length, angry, seed: Date.now() + Math.random() }]);
     // Change song on each add
     const name = getMusic().nextSong();
     setSongName(name);
@@ -257,7 +260,7 @@ export default function Home() {
     setPaused(false);
     const name = getMusic().playSong(0);
     setSongName(name);
-    setSasakis([{ id: 0, angry: false }]);
+    setSasakis([{ id: 0, angry: false, seed: Date.now() }]);
   };
 
   const handleStop = () => {
@@ -351,7 +354,7 @@ export default function Home() {
             {/* Sasakis */}
             <div className={`absolute inset-0 ${paused ? "pause-all" : ""}`}>
               {sasakis.map((s) => (
-                <DancingSasaki key={s.id} id={s.id} angry={s.angry} />
+                <DancingSasaki key={s.seed} id={s.id} angry={s.angry} seed={s.seed} />
               ))}
             </div>
 
