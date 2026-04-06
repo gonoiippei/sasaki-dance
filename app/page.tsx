@@ -177,7 +177,7 @@ export default function Home() {
           {/* Title */}
           <div className="text-center relative z-10">
             <p
-              className="animate-fade-in-up font-mincho text-gray-400 text-sm md:text-base tracking-[0.3em] mb-3"
+              className="animate-fade-in-up font-mincho text-gray-600 text-lg md:text-xl tracking-[0.3em] mb-3"
             >
               ボクはいいんだけど、
             </p>
@@ -188,26 +188,26 @@ export default function Home() {
               SASAKI
             </h1>
             <p
-              className="animate-fade-in-up font-mincho text-gray-400 text-sm md:text-base tracking-[0.3em] mb-12"
+              className="animate-fade-in-up font-mincho text-gray-600 text-lg md:text-xl tracking-[0.3em] mb-12"
               style={{ animationDelay: "0.4s" }}
             >
               がなんて言うかな？
             </p>
 
             <p
-              className="animate-fade-in-up font-elegant italic text-rose-400 text-2xl md:text-4xl tracking-wide mb-4"
+              className="animate-fade-in-up font-elegant italic text-rose-500 text-2xl md:text-4xl tracking-wide mb-4"
               style={{ animationDelay: "0.7s" }}
             >
               って、それより僕と踊りませんか？
             </p>
             <p
-              className="animate-fade-in-up font-elegant italic text-purple-400 text-xl md:text-3xl tracking-wider mb-2 animate-gentle-float"
+              className="animate-fade-in-up font-elegant italic text-purple-600 text-xl md:text-3xl tracking-wider mb-2 animate-gentle-float"
               style={{ animationDelay: "1.0s" }}
             >
               夢の中へ&ensp;夢の中へ
             </p>
             <p
-              className="animate-fade-in-up font-elegant italic text-sky-400 text-lg md:text-2xl tracking-wider"
+              className="animate-fade-in-up font-elegant italic text-sky-600 text-lg md:text-2xl tracking-wider"
               style={{ animationDelay: "1.3s" }}
             >
               行ってみたいと思いませんか
