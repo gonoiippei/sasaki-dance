@@ -231,6 +231,7 @@ export default function Home() {
     const audio = new Audio("/BGM.m4a");
     audio.loop = true;
     audio.volume = 0.5;
+    audio.currentTime = 3;
     audio.play().catch(() => {});
     bgmRef.current = audio;
   };
