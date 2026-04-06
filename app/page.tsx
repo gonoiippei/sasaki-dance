@@ -138,7 +138,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
       legR: LEG_STYLES[Math.floor(seededRandom(id * 37 + 4) * LEG_STYLES.length)],
       speed: [0.4, 0.7, 1.0, 1.4][Math.floor(seededRandom(id * 41 + 6) * 4)],
       delay: id * 0.15,
-      scale: [0.3, 0.7, 1.2, 2.2][Math.floor(seededRandom(id * 43 + 8) * 4)],
+      scale: [0.6, 1.4, 2.4, 4.0][Math.floor(seededRandom(id * 43 + 8) * 4)],
       torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
       angryLine: ANGRY_LINES[Math.floor(seededRandom(id * 53 + 13) * ANGRY_LINES.length)],
       face: FACE_IMAGES[Math.floor(seededRandom(id * 67 + 19) * FACE_IMAGES.length)],
