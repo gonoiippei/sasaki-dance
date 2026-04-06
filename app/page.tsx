@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
 import { MusicEngine } from "@/lib/music";
 
@@ -256,8 +256,17 @@ export default function Home() {
   const [paused, setPaused] = useState(false);
   const [songName, setSongName] = useState("");
   const [bgmStarted, setBgmStarted] = useState(false);
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
   const musicRef = useRef<MusicEngine | null>(null);
   const bgmRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Count visitor on mount
+    fetch("/api/count", { method: "POST" })
+      .then((r) => r.json())
+      .then((d) => setVisitorCount(d.count))
+      .catch(() => {});
+  }, []);
 
   const getMusic = () => {
     if (!musicRef.current) {
@@ -380,6 +389,20 @@ export default function Home() {
             >
               {bgmStarted ? "♪ BGM再生中..." : "♪ BGMを流す"}
             </button>
+
+            {/* Visitor counter */}
+            {visitorCount !== null && (
+              <p
+                className="animate-fade-in-up font-elegant italic text-gray-400 text-sm mt-6 tracking-wide"
+                style={{ animationDelay: "2.0s" }}
+              >
+                これまで{" "}
+                <span className="text-rose-400 font-mincho font-bold text-lg not-italic">
+                  {visitorCount.toLocaleString()}
+                </span>
+                {" "}人が夢の中へ
+              </p>
+            )}
           </div>
         </main>
       ) : (
