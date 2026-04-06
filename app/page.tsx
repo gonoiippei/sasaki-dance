@@ -3,16 +3,82 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 
-// Seeded random for consistent but varied positioning
 function seededRandom(seed: number) {
   const x = Math.sin(seed * 9301 + 49297) * 49297;
   return x - Math.floor(x);
 }
 
+/* Floating petals for the title screen */
+function Petals() {
+  const petals = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      left: seededRandom(i * 7 + 1) * 100,
+      size: 8 + seededRandom(i * 11 + 3) * 14,
+      delay: seededRandom(i * 13 + 5) * 12,
+      duration: 10 + seededRandom(i * 17 + 7) * 10,
+      variant: i % 2 === 0,
+      hue: 330 + seededRandom(i * 19 + 9) * 40,
+      opacity: 0.2 + seededRandom(i * 23 + 11) * 0.3,
+    })), []
+  );
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {petals.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${p.left}%`,
+            top: "-5%",
+            width: `${p.size}px`,
+            height: `${p.size * 0.7}px`,
+            background: `hsl(${p.hue}, 60%, 80%)`,
+            opacity: p.opacity,
+            animation: `${p.variant ? "petal-fall" : "petal-fall-2"} ${p.duration}s ease-in-out infinite`,
+            animationDelay: `${p.delay}s`,
+            borderRadius: "50% 0 50% 0",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* Smoke / mist layers */
+function SmokeLayers() {
+  return (
+    <>
+      <div
+        className="absolute inset-0 animate-soft-breathe"
+        style={{
+          background: "radial-gradient(ellipse at 50% 60%, rgba(255,220,240,0.4) 0%, rgba(255,245,250,0.1) 50%, transparent 70%)",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at 30% 80%, rgba(230,210,255,0.2) 0%, transparent 50%)",
+          animation: "smoke-drift 15s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at 70% 70%, rgba(210,240,255,0.15) 0%, transparent 50%)",
+          animation: "smoke-drift 20s ease-in-out infinite 5s",
+        }}
+      />
+    </>
+  );
+}
+
+/* ====== DANCING SASAKI ====== */
 const DANCE_STYLES = ["animate-dance-a", "animate-dance-b", "animate-dance-c", "animate-dance-d"];
 const ARM_STYLES = ["arm-wave-a", "arm-wave-b", "arm-wave-c"];
 const LEG_STYLES = ["leg-kick-a", "leg-kick-b"];
-const TORSO_COLORS = ["#c41e1e", "#ff2d95", "#b24dff", "#00c8ff", "#ffe600", "#ff6b1a"];
+const TORSO_COLORS = ["#c41e1e", "#e85d8a", "#9b59b6", "#5dade2", "#f39c12", "#e74c3c"];
 
 function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
   const rand = useMemo(() => ({
@@ -53,7 +119,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
           </div>
         )}
 
-        <div className="w-11 h-11 md:w-13 md:h-13 rounded-full overflow-hidden border-2 border-red-600 mx-auto shadow-none">
+        <div className="w-11 h-11 md:w-13 md:h-13 rounded-full overflow-hidden border-2 border-pink-300 mx-auto">
           <Image src="/sasaki_face.jpg" alt="SASAKI" width={52} height={52} className="w-full h-full object-cover" />
         </div>
 
@@ -65,16 +131,16 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
           <rect x="36" y="2" width="14" height="6" rx="3" fill={rand.torsoColor}
             style={{ transformOrigin: "36px 5px", animation: `${rand.armR} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay + 0.1}s` }}
           />
-          <rect x="16" y="30" width="9" height="26" rx="4" fill="#222"
+          <rect x="16" y="30" width="9" height="26" rx="4" fill="#ddd"
             style={{ transformOrigin: "20px 30px", animation: `${rand.legL} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay}s` }}
           />
-          <rect x="27" y="30" width="9" height="26" rx="4" fill="#222"
+          <rect x="27" y="30" width="9" height="26" rx="4" fill="#ddd"
             style={{ transformOrigin: "32px 30px", animation: `${rand.legR} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay + 0.1}s` }}
           />
-          <ellipse cx="20" cy="58" rx="6" ry="3" fill="#111"
+          <ellipse cx="20" cy="58" rx="6" ry="3" fill="#ccc"
             style={{ transformOrigin: "20px 30px", animation: `${rand.legL} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay}s` }}
           />
-          <ellipse cx="32" cy="58" rx="6" ry="3" fill="#111"
+          <ellipse cx="32" cy="58" rx="6" ry="3" fill="#ccc"
             style={{ transformOrigin: "32px 30px", animation: `${rand.legR} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay + 0.1}s` }}
           />
         </svg>
@@ -83,6 +149,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
   );
 }
 
+/* ====== MAIN ====== */
 export default function Home() {
   const [sasakis, setSasakis] = useState<{ id: number; angry: boolean }[]>([]);
   const [started, setStarted] = useState(false);
@@ -97,61 +164,71 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-black overflow-hidden relative">
-      {/* Disco BG */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,_rgba(255,45,149,0.08)_0%,_rgba(178,77,255,0.05)_30%,_transparent_70%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(0,240,255,0.04)_0%,_transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,_rgba(255,230,0,0.03)_0%,_transparent_40%)]" />
+    <div className="h-screen flex flex-col overflow-hidden relative bg-[#fdf8f5]">
 
       {!started ? (
-        <main className="flex-1 flex flex-col items-center justify-center px-4 relative z-10">
-          {/* Neon title */}
-          <div className="text-center mb-12">
-            <p className="animate-fade-in-up text-gray-400 text-base md:text-lg mb-2">ボクはいいんだけど、</p>
+        /* ===== TITLE SCREEN ===== */
+        <main className="flex-1 flex flex-col items-center justify-center px-6 relative">
+          {/* Smoke */}
+          <SmokeLayers />
+          {/* Petals */}
+          <Petals />
+
+          {/* Title */}
+          <div className="text-center relative z-10">
+            <p
+              className="animate-fade-in-up font-mincho text-gray-400 text-sm md:text-base tracking-[0.3em] mb-3"
+            >
+              ボクはいいんだけど、
+            </p>
             <h1
-              className="animate-fade-in-up neon-text-red text-5xl md:text-7xl font-black italic tracking-[0.2em] mb-2"
-              style={{ animationDelay: "0.15s" }}
+              className="animate-fade-in-up font-mincho text-red-500 text-5xl md:text-7xl font-black italic tracking-[0.25em] mb-3"
+              style={{ animationDelay: "0.2s" }}
             >
               SASAKI
             </h1>
-            <p className="animate-fade-in-up text-gray-400 text-base md:text-lg mb-8" style={{ animationDelay: "0.3s" }}>
+            <p
+              className="animate-fade-in-up font-mincho text-gray-400 text-sm md:text-base tracking-[0.3em] mb-12"
+              style={{ animationDelay: "0.4s" }}
+            >
               がなんて言うかな？
             </p>
 
             <p
-              className="animate-fade-in-up font-disco neon-text-pink text-2xl md:text-4xl mb-3 animate-neon-flicker"
-              style={{ animationDelay: "0.5s" }}
+              className="animate-fade-in-up font-elegant italic text-rose-400 text-2xl md:text-4xl tracking-wide mb-4"
+              style={{ animationDelay: "0.7s" }}
             >
               って、それより僕と踊りませんか？
             </p>
             <p
-              className="animate-fade-in-up font-disco neon-text-cyan text-xl md:text-3xl mb-1"
-              style={{ animationDelay: "0.7s" }}
+              className="animate-fade-in-up font-elegant italic text-purple-400 text-xl md:text-3xl tracking-wider mb-2 animate-gentle-float"
+              style={{ animationDelay: "1.0s" }}
             >
-              夢の中へ 夢の中へ
+              夢の中へ&ensp;夢の中へ
             </p>
             <p
-              className="animate-fade-in-up font-disco neon-text-purple text-lg md:text-2xl"
-              style={{ animationDelay: "0.9s" }}
+              className="animate-fade-in-up font-elegant italic text-sky-400 text-lg md:text-2xl tracking-wider"
+              style={{ animationDelay: "1.3s" }}
             >
               行ってみたいと思いませんか
             </p>
           </div>
 
+          {/* Button */}
           <button
             onClick={handleStart}
-            className="animate-fade-in-up neon-border-button bg-transparent text-white font-black text-2xl md:text-3xl px-14 py-5 rounded-full neon-text-pink"
-            style={{ animationDelay: "1.1s" }}
+            className="animate-fade-in-up relative z-10 mt-14 font-mincho text-rose-400 text-2xl md:text-3xl tracking-[0.2em] px-14 py-4 rounded-full border-2 border-rose-300 bg-white/60 backdrop-blur-sm hover:bg-rose-50 transition-all hover:scale-105"
+            style={{ animationDelay: "1.6s" }}
           >
             踊る？
           </button>
         </main>
       ) : (
+        /* ===== DANCE FLOOR ===== */
         <>
-          <main className="flex-1 relative">
-            {/* Floor reflection */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-purple-950/20 via-pink-950/10 to-transparent" />
-            <div className="absolute bottom-6 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-pink-500/30 to-transparent" />
+          <main className="flex-1 relative bg-[#fdf8f5]">
+            <SmokeLayers />
+            <Petals />
 
             {/* Sasakis */}
             <div className="absolute inset-0">
@@ -161,30 +238,31 @@ export default function Home() {
             </div>
 
             {/* Counter */}
-            <div className="absolute top-5 right-5 neon-text-yellow font-black text-xl italic z-50">
+            <div className="absolute top-5 right-5 font-mincho text-rose-400 font-bold text-lg italic z-50 tracking-wider">
               SASAKI x {sasakis.length}
             </div>
 
             {/* Mini title */}
             <div className="absolute top-5 left-5 z-50">
-              <p className="text-gray-500 text-xs">
-                ボクはいいんだけど、<span className="neon-text-red text-[10px] font-black italic">SASAKI</span>がなんて言うかな？
+              <p className="font-mincho text-gray-400 text-[11px] tracking-wider">
+                ボクはいいんだけど、<span className="text-red-400 font-bold italic">SASAKI</span>がなんて言うかな？
               </p>
-              <p className="font-disco neon-text-pink text-[10px] opacity-60">って、それより僕と踊りませんか？</p>
+              <p className="font-elegant italic text-rose-300 text-[10px]">って、それより僕と踊りませんか？</p>
             </div>
           </main>
 
-          <div className="flex-shrink-0 px-4 py-5 relative z-50 bg-gradient-to-t from-black via-black/95 to-transparent">
+          {/* Controls */}
+          <div className="flex-shrink-0 px-4 py-5 relative z-50 bg-gradient-to-t from-[#fdf8f5] via-[#fdf8f5]/95 to-transparent">
             <div className="max-w-md mx-auto flex gap-4 justify-center">
               <button
                 onClick={() => addSasaki(false)}
-                className="neon-border-button bg-transparent neon-text-pink font-bold text-base md:text-lg px-8 py-3 rounded-full active:scale-95"
+                className="font-mincho text-rose-400 border-2 border-rose-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-8 py-3 rounded-full hover:bg-rose-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
               >
                 もっと踊る？
               </button>
               <button
                 onClick={() => addSasaki(true)}
-                className="bg-transparent border border-gray-600 text-gray-400 hover:text-white font-bold text-base md:text-lg px-8 py-3 rounded-full transition-all hover:border-gray-400 active:scale-95"
+                className="font-mincho text-gray-400 border-2 border-gray-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-8 py-3 rounded-full hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
               >
                 踊らない
               </button>
