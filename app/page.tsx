@@ -80,6 +80,38 @@ const DANCE_STYLES = ["animate-dance-a", "animate-dance-b", "animate-dance-c", "
 const ARM_STYLES = ["arm-wave-a", "arm-wave-b", "arm-wave-c"];
 const LEG_STYLES = ["leg-kick-a", "leg-kick-b"];
 const TORSO_COLORS = ["#c41e1e", "#e85d8a", "#9b59b6", "#5dade2", "#f39c12", "#e74c3c"];
+const FACE_IMAGES = [
+  "/sasaki_face.jpg",
+  "/0b5acc5a18787fd28c2b04baa8678c09.png",
+  "/3cf378ff82690326834bca84b39a5c98.png",
+  "/4da79ac3f929b13d25287ea1514c26f5.png",
+  "/555ef4fd680e326594fe3ae313efa307.png",
+  "/6ed10f1aaef32690213e11c8c399b7c6.png",
+  "/70960b4d28475b96977ea89d241ebabd.png",
+  "/72c1f6b1e353d5721a8427f25413c850.png",
+  "/76e996130dc85923d76d3fa7abb37f59.png",
+  "/796d9b903a45287c3f36c1cac9ccf424.png",
+  "/7a71bcfefb67f201f540bba55edbca2a.png",
+  "/866313953a378c473bb8e05cfa3d0585.png",
+  "/8f83f37809d71690fb3c5c43f3f3468f.png",
+  "/969dcf12bbae3d4f68ba8ebdf47cc792.png",
+  "/99ce7a4c64410f689f948b3ba287a5a2.png",
+  "/T02UT64J6M7-U073A35HNSF-9498554b741e-512.jpg",
+  "/aafc060012d4784271495222930bd40b.png",
+  "/b0fecd9e7edf34fe93b76bf33c08b51e.png",
+  "/b7d5d102890f941b7b3dbe270663a6b2.jpg",
+  "/b8d06625caabaec79ca7ae84949a8e67.png",
+  "/b924be61107f61663179e1e90eef87b2.png",
+  "/e538264d57b7ea40fef951490ae37610.png",
+  "/eb73a2d1514990ddfc4c1264b3ddffb6.png",
+  "/ee75cf06f4fb2c257e9a000e575f3c51.png",
+  "/f494df3d4eee3c8103d55c1590c445fd.png",
+  "/f64162a49a9a37bc57b7b425f523792f.png",
+  "/f8fb9580e88c66990c7f769ec20ea1e8.png",
+  "/f992a16086e47778a4af1d72e733de8d.png",
+  "/fb04c010f6f9ec0ace5f9f4f7cba1488.png",
+  "/fdd51a7b43233bc7ef8f3cb73dcdc0a0.png",
+];
 const ANGRY_LINES = [
   "踊るに決まってるだろ！",
   "誰も俺を止められない",
@@ -109,6 +141,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
       scale: [0.3, 0.7, 1.2, 2.2][Math.floor(seededRandom(id * 43 + 8) * 4)],
       torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
       angryLine: ANGRY_LINES[Math.floor(seededRandom(id * 53 + 13) * ANGRY_LINES.length)],
+      face: FACE_IMAGES[Math.floor(seededRandom(id * 67 + 19) * FACE_IMAGES.length)],
       moveType,
       moveDuration: 3 + seededRandom(id * 61 + 19) * 8,
     };
@@ -145,7 +178,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
         )}
 
         <div className="w-11 h-11 md:w-13 md:h-13 rounded-full overflow-hidden border-2 border-pink-300 mx-auto">
-          <Image src="/sasaki_face.jpg" alt="SASAKI" width={52} height={52} className="w-full h-full object-cover" />
+          <Image src={rand.face} alt="SASAKI" width={52} height={52} className="w-full h-full object-cover" />
         </div>
 
         <svg width="52" height="75" viewBox="0 0 52 75" className="mx-auto -mt-[2px]">
