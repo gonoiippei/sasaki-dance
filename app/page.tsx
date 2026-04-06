@@ -80,6 +80,18 @@ const DANCE_STYLES = ["animate-dance-a", "animate-dance-b", "animate-dance-c", "
 const ARM_STYLES = ["arm-wave-a", "arm-wave-b", "arm-wave-c"];
 const LEG_STYLES = ["leg-kick-a", "leg-kick-b"];
 const TORSO_COLORS = ["#c41e1e", "#e85d8a", "#9b59b6", "#5dade2", "#f39c12", "#e74c3c"];
+const ANGRY_LINES = [
+  "踊るに決まってるだろ！",
+  "誰も俺を止められない",
+  "それでも踊り続ける",
+  "パーティーを続けよう",
+  "足が勝手に動くんだよ",
+  "夢の中へ連れてってやる",
+  "休憩？そんな概念はない",
+  "まだまだいけるだろ！",
+  "踊らない奴は帰れ！",
+  "止まったら負けだ",
+];
 
 function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
   const rand = useMemo(() => ({
@@ -94,6 +106,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
     delay: id * 0.15,
     scale: [0.3, 0.7, 1.2, 2.2][Math.floor(seededRandom(id * 43 + 8) * 4)],
     torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
+    angryLine: ANGRY_LINES[Math.floor(seededRandom(id * 53 + 13) * ANGRY_LINES.length)],
   }), [id]);
 
   return (
@@ -116,7 +129,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
             className="animate-pop-in bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-lg mb-1 text-center whitespace-nowrap"
             style={{ animationDelay: `${rand.delay + 0.3}s` }}
           >
-            踊るに決まってるだろ！
+            {rand.angryLine}
           </div>
         )}
 
