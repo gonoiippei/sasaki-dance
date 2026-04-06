@@ -214,13 +214,33 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
   const [songName, setSongName] = useState("");
+  const [bgmStarted, setBgmStarted] = useState(false);
   const musicRef = useRef<MusicEngine | null>(null);
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   const getMusic = () => {
     if (!musicRef.current) {
       musicRef.current = new MusicEngine();
     }
     return musicRef.current;
+  };
+
+  const startBgm = () => {
+    if (bgmStarted) return;
+    setBgmStarted(true);
+    const audio = new Audio("/BGM.m4a");
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.play().catch(() => {});
+    bgmRef.current = audio;
+  };
+
+  const stopBgm = () => {
+    if (bgmRef.current) {
+      bgmRef.current.pause();
+      bgmRef.current.currentTime = 0;
+      bgmRef.current = null;
+    }
   };
 
   const addSasaki = (angry: boolean) => {
@@ -231,6 +251,7 @@ export default function Home() {
   };
 
   const handleStart = () => {
+    stopBgm();
     setStarted(true);
     setPaused(false);
     const name = getMusic().playSong(0);
@@ -254,7 +275,7 @@ export default function Home() {
 
       {!started ? (
         /* ===== TITLE SCREEN ===== */
-        <main className="flex-1 flex flex-col items-center justify-center px-6 relative">
+        <main className="flex-1 flex flex-col items-center justify-center px-6 relative" onClick={startBgm}>
           {/* Smoke */}
           <SmokeLayers />
           {/* Petals */}
