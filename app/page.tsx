@@ -179,6 +179,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
 export default function Home() {
   const [sasakis, setSasakis] = useState<{ id: number; angry: boolean }[]>([]);
   const [started, setStarted] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [songName, setSongName] = useState("");
   const musicRef = useRef<MusicEngine | null>(null);
 
@@ -198,9 +199,21 @@ export default function Home() {
 
   const handleStart = () => {
     setStarted(true);
+    setPaused(false);
     const name = getMusic().playSong(0);
     setSongName(name);
     setSasakis([{ id: 0, angry: false }]);
+  };
+
+  const handleStop = () => {
+    setPaused(true);
+    getMusic().stop();
+  };
+
+  const handleResume = () => {
+    setPaused(false);
+    const name = getMusic().playSong();
+    setSongName(name);
   };
 
   return (
@@ -271,7 +284,7 @@ export default function Home() {
             <Petals />
 
             {/* Sasakis */}
-            <div className="absolute inset-0">
+            <div className={`absolute inset-0 ${paused ? "pause-all" : ""}`}>
               {sasakis.map((s) => (
                 <DancingSasaki key={s.id} id={s.id} angry={s.angry} />
               ))}
@@ -300,19 +313,36 @@ export default function Home() {
 
           {/* Controls */}
           <div className="flex-shrink-0 px-4 py-5 relative z-50 bg-gradient-to-t from-[#fdf8f5] via-[#fdf8f5]/95 to-transparent">
-            <div className="max-w-md mx-auto flex gap-4 justify-center">
-              <button
-                onClick={() => addSasaki(false)}
-                className="font-mincho text-rose-400 border-2 border-rose-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-8 py-3 rounded-full hover:bg-rose-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
-              >
-                もっと踊る？
-              </button>
-              <button
-                onClick={() => addSasaki(true)}
-                className="font-mincho text-gray-400 border-2 border-gray-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-8 py-3 rounded-full hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
-              >
-                踊らない
-              </button>
+            <div className="max-w-lg mx-auto flex gap-3 justify-center">
+              {paused ? (
+                <button
+                  onClick={handleResume}
+                  className="font-mincho text-rose-400 border-2 border-rose-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-8 py-3 rounded-full hover:bg-rose-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
+                >
+                  再開する
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => addSasaki(false)}
+                    className="font-mincho text-rose-400 border-2 border-rose-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-6 py-3 rounded-full hover:bg-rose-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
+                  >
+                    もっと踊る？
+                  </button>
+                  <button
+                    onClick={() => addSasaki(true)}
+                    className="font-mincho text-gray-400 border-2 border-gray-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-6 py-3 rounded-full hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
+                  >
+                    踊らない
+                  </button>
+                  <button
+                    onClick={handleStop}
+                    className="font-mincho text-gray-400 border-2 border-gray-300 bg-white/60 backdrop-blur-sm font-bold text-base md:text-lg px-6 py-3 rounded-full hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 tracking-wider"
+                  >
+                    止める
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </>

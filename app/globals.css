@@ -193,3 +193,11 @@ body {
 .animate-wander-s { animation: wander-s 6s ease-in-out infinite; }
 .animate-wander-m { animation: wander-m 8s ease-in-out infinite; }
 .animate-wander-l { animation: wander-l 10s ease-in-out infinite; }
+
+/* Pause all animations */
+.pause-all,
+.pause-all *,
+.pause-all *::before,
+.pause-all *::after {
+  animation-play-state: paused !important;
+}
