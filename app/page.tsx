@@ -379,17 +379,11 @@ export default function Home() {
             </div>
 
             {/* Reset */}
-            <button
-              onClick={() => { getMusic().stop(); setStarted(false); setPaused(false); setSasakis([]); setSongName(""); setBgmStarted(false); }}
-              className="absolute bottom-5 right-5 z-50 font-mincho text-gray-400 text-xs tracking-wider hover:text-rose-400 transition"
-            >
-              最初に戻る
-            </button>
           </main>
 
           {/* Controls */}
           <div className="flex-shrink-0 px-4 py-5 relative z-50 bg-gradient-to-t from-[#fdf8f5] via-[#fdf8f5]/95 to-transparent">
-            <div className="max-w-lg mx-auto flex gap-3 justify-center">
+            <div className="max-w-lg mx-auto flex gap-3 justify-center items-center">
               {paused ? (
                 <button
                   onClick={handleResume}
@@ -420,6 +414,13 @@ export default function Home() {
                 </>
               )}
             </div>
+            {/* Reset - right aligned */}
+            <button
+              onClick={() => { getMusic().stop(); setStarted(false); setPaused(false); setSasakis([]); setSongName(""); setBgmStarted(false); }}
+              className="absolute right-6 top-1/2 -translate-y-1/2 font-mincho text-gray-500 text-sm tracking-wider bg-white/70 backdrop-blur-sm border border-gray-300 px-4 py-2 rounded-full hover:bg-rose-50 hover:text-rose-500 hover:border-rose-300 transition-all"
+            >
+              最初に戻る
+            </button>
           </div>
         </>
       )}
