@@ -1,82 +1,81 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 
+// Seeded random for consistent but varied positioning
+function seededRandom(seed: number) {
+  const x = Math.sin(seed * 9301 + 49297) * 49297;
+  return x - Math.floor(x);
+}
+
+const DANCE_STYLES = ["animate-dance-a", "animate-dance-b", "animate-dance-c", "animate-dance-d"];
+const ARM_STYLES = ["arm-wave-a", "arm-wave-b", "arm-wave-c"];
+const LEG_STYLES = ["leg-kick-a", "leg-kick-b"];
+const TORSO_COLORS = ["#c41e1e", "#ff2d95", "#b24dff", "#00c8ff", "#ffe600", "#ff6b1a"];
+
 function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
-  const delay = id * 0.2;
-  // Spread sasakis across the stage
-  const positions = [0, -140, 140, -70, 70, -210, 210, -35, 35, -175, 175];
-  const xOffset = positions[id % positions.length] + (id >= positions.length ? (id % 2 === 0 ? 30 : -30) : 0);
-  const speedVariant = 0.6 + (id % 3) * 0.1;
+  const rand = useMemo(() => ({
+    x: (seededRandom(id * 7 + 3) - 0.5) * 80,
+    y: seededRandom(id * 13 + 7) * 30,
+    dance: DANCE_STYLES[Math.floor(seededRandom(id * 17 + 1) * DANCE_STYLES.length)],
+    armL: ARM_STYLES[Math.floor(seededRandom(id * 23 + 5) * ARM_STYLES.length)],
+    armR: ARM_STYLES[Math.floor(seededRandom(id * 29 + 9) * ARM_STYLES.length)],
+    legL: LEG_STYLES[Math.floor(seededRandom(id * 31 + 2) * LEG_STYLES.length)],
+    legR: LEG_STYLES[Math.floor(seededRandom(id * 37 + 4) * LEG_STYLES.length)],
+    speed: 0.5 + seededRandom(id * 41 + 6) * 0.6,
+    delay: id * 0.15,
+    scale: 0.8 + seededRandom(id * 43 + 8) * 0.4,
+    torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
+  }), [id]);
 
   return (
     <div
-      className="absolute bottom-0 animate-dance-in"
+      className="absolute animate-dance-in"
       style={{
-        left: `calc(50% + ${xOffset}px)`,
-        transform: "translateX(-50%)",
-        animationDelay: `${delay}s`,
-        zIndex: 10 + id,
+        left: `${rand.x + 50}%`,
+        bottom: `${rand.y + 5}%`,
+        transform: `translateX(-50%) scale(${rand.scale})`,
+        animationDelay: `${rand.delay}s`,
+        zIndex: Math.floor(10 + rand.y),
       }}
     >
       <div
-        className={angry ? "animate-angry-shake" : "animate-dance-bounce"}
-        style={{ animationDelay: `${delay + 0.5}s`, animationDuration: `${speedVariant}s` }}
+        className={angry ? "animate-angry-shake" : rand.dance}
+        style={{ animationDelay: `${rand.delay + 0.5}s`, animationDuration: `${rand.speed}s` }}
       >
-        {/* Angry bubble */}
         {angry && (
           <div
             className="animate-pop-in bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-lg mb-1 text-center whitespace-nowrap"
-            style={{ animationDelay: `${delay + 0.3}s` }}
+            style={{ animationDelay: `${rand.delay + 0.3}s` }}
           >
             踊るに決まってるだろ！
           </div>
         )}
 
-        {/* Head */}
-        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border-2 border-red-700 mx-auto">
-          <Image
-            src="/sasaki_face.jpg"
-            alt="SASAKI"
-            width={56}
-            height={56}
-            className="w-full h-full object-cover"
-          />
+        <div className="w-11 h-11 md:w-13 md:h-13 rounded-full overflow-hidden border-2 border-red-600 mx-auto shadow-[0_0_10px_rgba(255,45,149,0.5)]">
+          <Image src="/sasaki_face.jpg" alt="SASAKI" width={52} height={52} className="w-full h-full object-cover" />
         </div>
 
-        {/* Body */}
-        <svg width="56" height="80" viewBox="0 0 56 80" className="mx-auto -mt-[2px]">
-          {/* Torso */}
-          <rect x="18" y="0" width="20" height="32" rx="4" fill="#c41e1e" />
-          {/* Left arm */}
-          <rect x="2" y="2" width="16" height="7" rx="3.5" fill="#c41e1e"
-            className="origin-[18px_5px] animate-arm-left"
-            style={{ animationDelay: `${delay}s`, animationDuration: `${speedVariant}s` }}
+        <svg width="52" height="75" viewBox="0 0 52 75" className="mx-auto -mt-[2px]">
+          <rect x="16" y="0" width="20" height="30" rx="4" fill={rand.torsoColor} />
+          <rect x="2" y="2" width="14" height="6" rx="3" fill={rand.torsoColor}
+            style={{ transformOrigin: "16px 5px", animation: `${rand.armL} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay}s` }}
           />
-          {/* Right arm */}
-          <rect x="38" y="2" width="16" height="7" rx="3.5" fill="#c41e1e"
-            className="origin-[38px_5px] animate-arm-right"
-            style={{ animationDelay: `${delay}s`, animationDuration: `${speedVariant}s` }}
+          <rect x="36" y="2" width="14" height="6" rx="3" fill={rand.torsoColor}
+            style={{ transformOrigin: "36px 5px", animation: `${rand.armR} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay + 0.1}s` }}
           />
-          {/* Left leg */}
-          <rect x="18" y="32" width="9" height="28" rx="4" fill="#333"
-            className="origin-[22px_32px] animate-leg-left"
-            style={{ animationDelay: `${delay}s`, animationDuration: `${speedVariant}s` }}
+          <rect x="16" y="30" width="9" height="26" rx="4" fill="#222"
+            style={{ transformOrigin: "20px 30px", animation: `${rand.legL} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay}s` }}
           />
-          {/* Right leg */}
-          <rect x="29" y="32" width="9" height="28" rx="4" fill="#333"
-            className="origin-[34px_32px] animate-leg-right"
-            style={{ animationDelay: `${delay}s`, animationDuration: `${speedVariant}s` }}
+          <rect x="27" y="30" width="9" height="26" rx="4" fill="#222"
+            style={{ transformOrigin: "32px 30px", animation: `${rand.legR} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay + 0.1}s` }}
           />
-          {/* Shoes */}
-          <ellipse cx="22" cy="62" rx="7" ry="3.5" fill="#111"
-            className="origin-[22px_32px] animate-leg-left"
-            style={{ animationDelay: `${delay}s`, animationDuration: `${speedVariant}s` }}
+          <ellipse cx="20" cy="58" rx="6" ry="3" fill="#111"
+            style={{ transformOrigin: "20px 30px", animation: `${rand.legL} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay}s` }}
           />
-          <ellipse cx="34" cy="62" rx="7" ry="3.5" fill="#111"
-            className="origin-[34px_32px] animate-leg-right"
-            style={{ animationDelay: `${delay}s`, animationDuration: `${speedVariant}s` }}
+          <ellipse cx="32" cy="58" rx="6" ry="3" fill="#111"
+            style={{ transformOrigin: "32px 30px", animation: `${rand.legR} ${rand.speed}s ease-in-out infinite`, animationDelay: `${rand.delay + 0.1}s` }}
           />
         </svg>
       </div>
@@ -99,76 +98,93 @@ export default function Home() {
 
   return (
     <div className="h-screen flex flex-col bg-black overflow-hidden relative">
-      {/* Disco background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_80%,_rgba(196,30,30,0.12)_0%,_transparent_60%)] animate-disco-glow" />
+      {/* Disco BG */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,_rgba(255,45,149,0.08)_0%,_rgba(178,77,255,0.05)_30%,_transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,_rgba(0,240,255,0.04)_0%,_transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,_rgba(255,230,0,0.03)_0%,_transparent_40%)]" />
 
       {!started ? (
-        /* Title screen */
         <main className="flex-1 flex flex-col items-center justify-center px-4 relative z-10">
-          <h1 className="animate-fade-in-up text-center leading-relaxed mb-10">
-            <span className="text-gray-400 text-lg md:text-xl">ボクはいいんだけど、</span>
-            <br />
-            <span className="text-red-600 text-4xl md:text-6xl font-black italic tracking-[0.15em]">SASAKI</span>
-            <br />
-            <span className="text-gray-400 text-lg md:text-xl">がなんて言うかな？</span>
-            <br />
-            <br />
-            <span className="text-gray-500 text-base md:text-lg">って、それより僕と踊りませんか？</span>
-            <br />
-            <span className="text-gray-600 text-sm">夢の中へ 夢の中へ</span>
-            <br />
-            <span className="text-gray-600 text-sm">行ってみたいと思いませんか</span>
-          </h1>
+          {/* Neon title */}
+          <div className="text-center mb-12">
+            <p className="animate-fade-in-up text-gray-400 text-base md:text-lg mb-2">ボクはいいんだけど、</p>
+            <h1
+              className="animate-fade-in-up neon-text-red text-5xl md:text-7xl font-black italic tracking-[0.2em] mb-2"
+              style={{ animationDelay: "0.15s" }}
+            >
+              SASAKI
+            </h1>
+            <p className="animate-fade-in-up text-gray-400 text-base md:text-lg mb-8" style={{ animationDelay: "0.3s" }}>
+              がなんて言うかな？
+            </p>
+
+            <p
+              className="animate-fade-in-up font-disco neon-text-pink text-2xl md:text-4xl mb-3 animate-neon-flicker"
+              style={{ animationDelay: "0.5s" }}
+            >
+              って、それより僕と踊りませんか？
+            </p>
+            <p
+              className="animate-fade-in-up font-disco neon-text-cyan text-xl md:text-3xl mb-1"
+              style={{ animationDelay: "0.7s" }}
+            >
+              夢の中へ 夢の中へ
+            </p>
+            <p
+              className="animate-fade-in-up font-disco neon-text-purple text-lg md:text-2xl"
+              style={{ animationDelay: "0.9s" }}
+            >
+              行ってみたいと思いませんか
+            </p>
+          </div>
 
           <button
             onClick={handleStart}
-            className="animate-fade-in-up bg-red-700 hover:bg-red-600 text-white font-black text-2xl md:text-3xl px-14 py-5 rounded-full transition-all duration-300 hover:scale-110 shadow-lg shadow-red-900/50"
-            style={{ animationDelay: "0.3s" }}
+            className="animate-fade-in-up neon-border-button bg-transparent text-white font-black text-2xl md:text-3xl px-14 py-5 rounded-full neon-text-pink"
+            style={{ animationDelay: "1.1s" }}
           >
             踊る？
           </button>
         </main>
       ) : (
-        /* Dance floor */
         <>
-          {/* Stage */}
           <main className="flex-1 relative">
-            {/* Floor line */}
-            <div className="absolute bottom-8 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-red-900/30 to-transparent" />
+            {/* Floor reflection */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-purple-950/20 via-pink-950/10 to-transparent" />
+            <div className="absolute bottom-6 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-pink-500/30 to-transparent" />
 
             {/* Sasakis */}
-            <div className="absolute bottom-10 left-0 right-0 h-[200px]">
+            <div className="absolute inset-0">
               {sasakis.map((s) => (
                 <DancingSasaki key={s.id} id={s.id} angry={s.angry} />
               ))}
             </div>
 
             {/* Counter */}
-            <div className="absolute top-6 right-6 text-red-600 font-black text-xl italic z-50">
+            <div className="absolute top-5 right-5 neon-text-yellow font-black text-xl italic z-50">
               SASAKI x {sasakis.length}
             </div>
 
-            {/* Title small */}
-            <div className="absolute top-6 left-6 z-50">
-              <p className="text-gray-600 text-xs">
-                ボクはいいんだけど、<span className="text-red-800 font-black italic">SASAKI</span>がなんて言うかな？
+            {/* Mini title */}
+            <div className="absolute top-5 left-5 z-50">
+              <p className="text-gray-500 text-xs">
+                ボクはいいんだけど、<span className="neon-text-red text-[10px] font-black italic">SASAKI</span>がなんて言うかな？
               </p>
-              <p className="text-gray-700 text-[10px]">って、それより僕と踊りませんか？</p>
+              <p className="font-disco neon-text-pink text-[10px] opacity-60">って、それより僕と踊りませんか？</p>
             </div>
           </main>
 
-          {/* Controls */}
-          <div className="flex-shrink-0 px-4 py-5 relative z-50 bg-gradient-to-t from-black via-black/90 to-transparent">
+          <div className="flex-shrink-0 px-4 py-5 relative z-50 bg-gradient-to-t from-black via-black/95 to-transparent">
             <div className="max-w-md mx-auto flex gap-4 justify-center">
               <button
                 onClick={() => addSasaki(false)}
-                className="bg-red-700 hover:bg-red-600 text-white font-bold text-base md:text-lg px-8 py-3 rounded-full transition-all hover:scale-105 active:scale-95"
+                className="neon-border-button bg-transparent neon-text-pink font-bold text-base md:text-lg px-8 py-3 rounded-full active:scale-95"
               >
                 もっと踊る？
               </button>
               <button
                 onClick={() => addSasaki(true)}
-                className="bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white font-bold text-base md:text-lg px-8 py-3 rounded-full transition-all hover:scale-105 active:scale-95 border border-gray-700"
+                className="bg-transparent border border-gray-600 text-gray-400 hover:text-white font-bold text-base md:text-lg px-8 py-3 rounded-full transition-all hover:border-gray-400 active:scale-95"
               >
                 踊らない
               </button>
