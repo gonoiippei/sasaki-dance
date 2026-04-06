@@ -377,6 +377,14 @@ export default function Home() {
               </p>
               <p className="font-elegant italic text-rose-300 text-[10px]">って、それより僕と踊りませんか？</p>
             </div>
+
+            {/* Reset */}
+            <button
+              onClick={() => { getMusic().stop(); setStarted(false); setPaused(false); setSasakis([]); setSongName(""); setBgmStarted(false); }}
+              className="absolute bottom-5 right-5 z-50 font-mincho text-gray-400 text-xs tracking-wider hover:text-rose-400 transition"
+            >
+              最初に戻る
+            </button>
           </main>
 
           {/* Controls */}
