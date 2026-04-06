@@ -181,7 +181,7 @@ function DancingSasaki({ id, angry, seed }: { id: number; angry: boolean; seed: 
       scale: pick([0.6, 1.4, 2.4, 4.0]),
       torsoColor: pick(TORSO_COLORS),
       angryLine: pick(ANGRY_LINES),
-      face: pick(FACE_IMAGES),
+      face: id < 5 ? "/SASAKI.png" : pick(FACE_IMAGES),
       moveType,
       moveDuration: 3 + Math.random() * 8,
     };
