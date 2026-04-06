@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import Image from "next/image";
+import { MusicEngine } from "@/lib/music";
 
 function seededRandom(seed: number) {
   const x = Math.sin(seed * 9301 + 49297) * 49297;
@@ -153,14 +154,28 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
 export default function Home() {
   const [sasakis, setSasakis] = useState<{ id: number; angry: boolean }[]>([]);
   const [started, setStarted] = useState(false);
+  const [songName, setSongName] = useState("");
+  const musicRef = useRef<MusicEngine | null>(null);
+
+  const getMusic = () => {
+    if (!musicRef.current) {
+      musicRef.current = new MusicEngine();
+    }
+    return musicRef.current;
+  };
 
   const addSasaki = (angry: boolean) => {
     setSasakis((prev) => [...prev, { id: prev.length, angry }]);
+    // Change song on each add
+    const name = getMusic().nextSong();
+    setSongName(name);
   };
 
   const handleStart = () => {
     setStarted(true);
-    addSasaki(false);
+    const name = getMusic().playSong(0);
+    setSongName(name);
+    setSasakis([{ id: 0, angry: false }]);
   };
 
   return (
@@ -237,9 +252,16 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Counter */}
-            <div className="absolute top-5 right-5 font-mincho text-rose-400 font-bold text-lg italic z-50 tracking-wider">
-              SASAKI x {sasakis.length}
+            {/* Counter + Song name */}
+            <div className="absolute top-5 right-5 text-right z-50">
+              <div className="font-mincho text-rose-400 font-bold text-lg italic tracking-wider">
+                SASAKI x {sasakis.length}
+              </div>
+              {songName && (
+                <div className="font-elegant italic text-purple-400 text-sm mt-1">
+                  ♪ {songName}
+                </div>
+              )}
             </div>
 
             {/* Mini title */}
