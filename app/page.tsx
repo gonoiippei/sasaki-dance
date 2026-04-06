@@ -201,7 +201,7 @@ export default function Home() {
               って、それより僕と踊りませんか？
             </p>
             <p
-              className="animate-fade-in-up font-elegant italic text-purple-600 text-xl md:text-3xl tracking-wider mb-2 animate-gentle-float"
+              className="animate-fade-in-up font-elegant italic text-purple-600 text-xl md:text-3xl tracking-wider mb-2"
               style={{ animationDelay: "1.0s" }}
             >
               夢の中へ&ensp;夢の中へ
