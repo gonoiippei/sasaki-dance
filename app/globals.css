@@ -28,45 +28,22 @@ body {
 /* === NEON TITLE === */
 .neon-text-pink {
   color: #ff2d95;
-  text-shadow:
-    0 0 7px #ff2d95,
-    0 0 20px #ff2d95,
-    0 0 42px #ff2d95,
-    0 0 80px #ff006a;
 }
 
 .neon-text-cyan {
   color: #00f0ff;
-  text-shadow:
-    0 0 7px #00f0ff,
-    0 0 20px #00f0ff,
-    0 0 42px #00f0ff,
-    0 0 80px #00c8ff;
 }
 
 .neon-text-yellow {
   color: #ffe600;
-  text-shadow:
-    0 0 7px #ffe600,
-    0 0 20px #ffe600,
-    0 0 42px #ffe600;
 }
 
 .neon-text-purple {
   color: #b24dff;
-  text-shadow:
-    0 0 7px #b24dff,
-    0 0 20px #b24dff,
-    0 0 42px #b24dff;
 }
 
 .neon-text-red {
   color: #ff1a1a;
-  text-shadow:
-    0 0 7px #ff1a1a,
-    0 0 20px #ff1a1a,
-    0 0 42px #ff1a1a,
-    0 0 80px #cc0000;
 }
 
 .font-disco {
@@ -75,18 +52,11 @@ body {
 
 .neon-border-button {
   border: 2px solid #ff2d95;
-  box-shadow:
-    0 0 10px #ff2d95,
-    0 0 30px #ff2d9540,
-    inset 0 0 10px #ff2d9520;
   transition: all 0.3s;
 }
 
 .neon-border-button:hover {
-  box-shadow:
-    0 0 15px #ff2d95,
-    0 0 50px #ff2d9560,
-    inset 0 0 20px #ff2d9530;
+  background: #ff2d9520;
   transform: scale(1.05);
 }
 

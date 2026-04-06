@@ -25,7 +25,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
     legR: LEG_STYLES[Math.floor(seededRandom(id * 37 + 4) * LEG_STYLES.length)],
     speed: 0.5 + seededRandom(id * 41 + 6) * 0.6,
     delay: id * 0.15,
-    scale: 0.8 + seededRandom(id * 43 + 8) * 0.4,
+    scale: 0.5 + seededRandom(id * 43 + 8) * 1.0,
     torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
   }), [id]);
 
@@ -53,7 +53,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
           </div>
         )}
 
-        <div className="w-11 h-11 md:w-13 md:h-13 rounded-full overflow-hidden border-2 border-red-600 mx-auto shadow-[0_0_10px_rgba(255,45,149,0.5)]">
+        <div className="w-11 h-11 md:w-13 md:h-13 rounded-full overflow-hidden border-2 border-red-600 mx-auto shadow-none">
           <Image src="/sasaki_face.jpg" alt="SASAKI" width={52} height={52} className="w-full h-full object-cover" />
         </div>
 
