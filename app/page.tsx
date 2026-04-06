@@ -94,31 +94,42 @@ const ANGRY_LINES = [
 ];
 
 function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
-  const rand = useMemo(() => ({
-    x: (seededRandom(id * 7 + 3) - 0.5) * 80,
-    y: seededRandom(id * 13 + 7) * 30,
-    dance: DANCE_STYLES[Math.floor(seededRandom(id * 17 + 1) * DANCE_STYLES.length)],
-    armL: ARM_STYLES[Math.floor(seededRandom(id * 23 + 5) * ARM_STYLES.length)],
-    armR: ARM_STYLES[Math.floor(seededRandom(id * 29 + 9) * ARM_STYLES.length)],
-    legL: LEG_STYLES[Math.floor(seededRandom(id * 31 + 2) * LEG_STYLES.length)],
-    legR: LEG_STYLES[Math.floor(seededRandom(id * 37 + 4) * LEG_STYLES.length)],
-    speed: [0.4, 0.7, 1.0, 1.4][Math.floor(seededRandom(id * 41 + 6) * 4)],
-    delay: id * 0.15,
-    scale: [0.3, 0.7, 1.2, 2.2][Math.floor(seededRandom(id * 43 + 8) * 4)],
-    torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
-    angryLine: ANGRY_LINES[Math.floor(seededRandom(id * 53 + 13) * ANGRY_LINES.length)],
-  }), [id]);
+  const rand = useMemo(() => {
+    const moveType = Math.floor(seededRandom(id * 59 + 17) * 4); // 0=stay, 1=small, 2=medium, 3=big wander
+    return {
+      x: 5 + seededRandom(id * 7 + 3) * 90,
+      y: 5 + seededRandom(id * 13 + 7) * 50,
+      dance: DANCE_STYLES[Math.floor(seededRandom(id * 17 + 1) * DANCE_STYLES.length)],
+      armL: ARM_STYLES[Math.floor(seededRandom(id * 23 + 5) * ARM_STYLES.length)],
+      armR: ARM_STYLES[Math.floor(seededRandom(id * 29 + 9) * ARM_STYLES.length)],
+      legL: LEG_STYLES[Math.floor(seededRandom(id * 31 + 2) * LEG_STYLES.length)],
+      legR: LEG_STYLES[Math.floor(seededRandom(id * 37 + 4) * LEG_STYLES.length)],
+      speed: [0.4, 0.7, 1.0, 1.4][Math.floor(seededRandom(id * 41 + 6) * 4)],
+      delay: id * 0.15,
+      scale: [0.3, 0.7, 1.2, 2.2][Math.floor(seededRandom(id * 43 + 8) * 4)],
+      torsoColor: TORSO_COLORS[Math.floor(seededRandom(id * 47 + 11) * TORSO_COLORS.length)],
+      angryLine: ANGRY_LINES[Math.floor(seededRandom(id * 53 + 13) * ANGRY_LINES.length)],
+      moveType,
+      moveDuration: 3 + seededRandom(id * 61 + 19) * 8,
+    };
+  }, [id]);
+
+  const moveClass = ["", "animate-wander-s", "animate-wander-m", "animate-wander-l"][rand.moveType];
 
   return (
     <div
       className="absolute animate-dance-in"
       style={{
-        left: `${rand.x + 50}%`,
-        bottom: `${rand.y + 5}%`,
-        transform: `translateX(-50%) scale(${rand.scale})`,
+        left: `${rand.x}%`,
+        bottom: `${rand.y}%`,
+        transform: `scale(${rand.scale})`,
         animationDelay: `${rand.delay}s`,
         zIndex: Math.floor(10 + rand.y),
       }}
+    >
+    <div
+      className={moveClass}
+      style={moveClass ? { animationDuration: `${rand.moveDuration}s` } : {}}
     >
       <div
         className={angry ? "animate-angry-shake" : rand.dance}
@@ -159,6 +170,7 @@ function DancingSasaki({ id, angry }: { id: number; angry: boolean }) {
           />
         </svg>
       </div>
+    </div>
     </div>
   );
 }

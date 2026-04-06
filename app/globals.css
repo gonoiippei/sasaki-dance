@@ -163,3 +163,33 @@ body {
 .animate-dance-d { animation: dance-d 0.75s ease-in-out infinite; }
 .animate-angry-shake { animation: angry-shake 0.5s ease-in-out infinite; }
 .animate-pop-in { opacity: 0; animation: pop-in 0.5s ease-out forwards; }
+
+/* Wander animations - characters moving around */
+@keyframes wander-s {
+  0%, 100% { margin-left: 0; margin-bottom: 0; }
+  25% { margin-left: 20px; margin-bottom: 10px; }
+  50% { margin-left: -15px; margin-bottom: -5px; }
+  75% { margin-left: 10px; margin-bottom: 15px; }
+}
+
+@keyframes wander-m {
+  0%, 100% { margin-left: 0; margin-bottom: 0; }
+  20% { margin-left: 60px; margin-bottom: -20px; }
+  40% { margin-left: -40px; margin-bottom: 30px; }
+  60% { margin-left: 80px; margin-bottom: 10px; }
+  80% { margin-left: -30px; margin-bottom: -15px; }
+}
+
+@keyframes wander-l {
+  0%, 100% { margin-left: 0; margin-bottom: 0; }
+  14% { margin-left: 120px; margin-bottom: 40px; }
+  28% { margin-left: -80px; margin-bottom: -30px; }
+  42% { margin-left: 150px; margin-bottom: -20px; }
+  57% { margin-left: -120px; margin-bottom: 50px; }
+  71% { margin-left: 60px; margin-bottom: -40px; }
+  85% { margin-left: -150px; margin-bottom: 20px; }
+}
+
+.animate-wander-s { animation: wander-s 6s ease-in-out infinite; }
+.animate-wander-m { animation: wander-m 8s ease-in-out infinite; }
+.animate-wander-l { animation: wander-l 10s ease-in-out infinite; }
