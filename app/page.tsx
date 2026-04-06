@@ -275,7 +275,7 @@ export default function Home() {
 
       {!started ? (
         /* ===== TITLE SCREEN ===== */
-        <main className="flex-1 flex flex-col items-center justify-center px-6 relative" onClick={startBgm}>
+        <main className="flex-1 flex flex-col items-center justify-center px-6 relative">
           {/* Smoke */}
           <SmokeLayers />
           {/* Petals */}
@@ -321,14 +321,24 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Button */}
-          <button
-            onClick={handleStart}
-            className="animate-fade-in-up relative z-10 mt-14 font-mincho text-rose-400 text-2xl md:text-3xl tracking-[0.2em] px-14 py-4 rounded-full border-2 border-rose-300 bg-white/60 backdrop-blur-sm hover:bg-rose-50 transition-all hover:scale-105"
-            style={{ animationDelay: "1.6s" }}
-          >
-            踊る？
-          </button>
+          {/* Buttons */}
+          <div className="flex flex-col items-center gap-4 relative z-10 mt-14">
+            <button
+              onClick={handleStart}
+              className="animate-fade-in-up font-mincho text-rose-400 text-2xl md:text-3xl tracking-[0.2em] px-14 py-4 rounded-full border-2 border-rose-300 bg-white/60 backdrop-blur-sm hover:bg-rose-50 transition-all hover:scale-105"
+              style={{ animationDelay: "1.6s" }}
+            >
+              踊る？
+            </button>
+            <button
+              onClick={startBgm}
+              disabled={bgmStarted}
+              className="animate-fade-in-up font-mincho text-purple-400 text-sm tracking-[0.15em] px-8 py-2 rounded-full border border-purple-300 bg-white/40 backdrop-blur-sm hover:bg-purple-50 transition-all hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+              style={{ animationDelay: "1.8s" }}
+            >
+              {bgmStarted ? "♪ BGM再生中..." : "♪ BGMを流す"}
+            </button>
+          </div>
         </main>
       ) : (
         /* ===== DANCE FLOOR ===== */
